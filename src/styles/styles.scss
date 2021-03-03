@@ -1,0 +1,382 @@
+.card-container {
+   display: flex;
+   flex-direction: column;
+   justify-content: flex-start;
+   align-items: center;
+   margin: 10px 20px;
+   width: 200px; // for title length
+   text-align: center;
+   .video-container {
+      width: 300px;
+      height: 200px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      .play-button {
+         position: absolute;
+         width: 300px;
+         height: 200px;
+         display: flex;
+         flex-direction: row;
+         justify-content: center;
+         align-items: center;
+         color: white;
+      }
+   }
+   .audio-container {
+      width: 300px;
+      height: 200px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      .play-button {
+         position: absolute;
+         width: 300px;
+         height: 200px;
+         display: flex;
+         flex-direction: row;
+         justify-content: center;
+         align-items: center;
+         color: white;
+      }
+   }
+   .card-thumbnail {
+      display: flex;
+      align-items: center;
+      .card-image {
+         width: 200px;
+         height: 200px;
+         object-fit: cover;
+         border-radius: 10px;
+         &.large {
+            width: 300px;
+            height: 300px;
+         }
+         
+      }
+      @media (max-width: 768px) {
+         .card-image {
+            width: 250px;
+            height: 250px;
+            &.large {
+               width: 250px;
+               height: 250px;
+            }
+         }
+      }
+   }
+   
+   .card-play {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0,0,0, 0.5);
+      border-radius: 10px;
+      .card-btn {
+         color: white;
+         width: 80px;
+         height: 80px;
+         cursor: pointer;
+      }
+      .card-btn-play {
+         color: white;
+         width: 80px;
+         height: 80px;
+         cursor: pointer;
+      }
+      .card-btn-pause {
+         color: white;
+         width: 80px;
+         height: 80px;
+         cursor: pointer;
+      }
+      &.large {
+         width: 300px;
+         height: 300px;
+         @media (max-width: 768px) {
+            width: 250px;
+            height: 250px;
+         }
+      }
+   }
+
+   .card-title {
+      cursor: pointer;
+      span {
+         font-size: 16px;
+      }
+   }
+
+   .card-share {
+      position: absolute;
+      display: flex;
+      width: 200px;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: flex-start;
+      margin: 5px 5px 0 0px;
+      .share-btn {
+         width: 30px;
+         height: 30px;
+         color: #2ad1db;
+         cursor: pointer;
+      }
+      .share-modal {
+         position: absolute;
+         width: 180px;
+         height: 250px;
+         background: rgba(0, 0, 0, 0.7);
+         border-radius: 10px;
+         top: 30px;
+         right: -50px;
+         z-index: 999;
+         .close-btn {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            .close {
+               color: #2ad1db;
+               cursor: pointer;
+               z-index: 99999;
+            }
+         }
+         .error-container {
+            height: 20px;
+            .error-text {
+               color: red;
+               font-size: 12px;
+               line-height: 12px;
+            }
+         }
+         
+         .checkbox-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 2px;
+            .checkbox {
+               margin: 0 15px;
+            }
+            span {
+               font-size: 12px;
+               color: #2ad1db;
+            }
+         }
+         .text-center {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 25px 0 20px 0;
+            color: #2ad1db;
+            &.report {
+               margin: 27px 0 10px 0;
+               font-size: 12px;
+            }
+         }
+         .btn-icon {
+            color: white;
+            cursor: pointer;
+         }
+         .btn-outline {
+            background: #2ad1db;
+            border-radius: 5px;
+            padding: 5px;
+            margin-bottom: 100px;
+            .btn-icon {
+               color: white;
+               cursor: pointer;
+            }
+            &:hover {
+               background: #2bacb3;
+            }
+         }
+         #report-btn {
+            background: #2ad1db;
+            border-radius: 5px;
+            cursor: pointer;
+            .text-white {
+               font-size: 12px;
+               font-weight: bold;
+               margin: 5px;
+            }
+            &:hover {
+               background: #2bacb3;
+            }
+         }
+         #report-btn-red {
+            background: #e95758;
+            border-radius: 5px;
+            cursor: pointer;
+            .text-white {
+               font-size: 12px;
+               font-weight: bold;
+               margin: 5px;
+            }
+            &:hover {
+               background: #ae1c34;
+            }
+         }
+         
+      }
+   }
+   @media (max-width: 768px) {
+      .card-play {
+         width: 250px;
+         height: 250px;
+      }
+      .card-share {
+         width: 250px;
+      }
+   }
+}
+
+@media (max-width: 768px) {
+   .card-container {
+      width: 250px;
+   }
+}
+
+.custom-control-label:before{
+   background-color:white;
+}
+ .custom-checkbox .custom-control-input:checked~.custom-control-label::before{
+   background-color:#2bacb3;
+}
+
+.howlyr-logo {
+   width: 130px;
+   height: 33px;
+   margin: 5px;
+   cursor: pointer;
+}
+
+#wrapper-100vh {
+   height: calc(100vh - 198px);
+   @media (max-width: 768px) {
+      height: auto;
+   }
+}
+
+hr {
+   margin-top: 1rem;
+   margin-bottom: 1rem;
+   border: 0;
+   border-top: 2px solid rgba(0, 0, 0, 0.3);
+   width: 90%;
+}
+
+.bottom-title {
+   margin-bottom: 10px;
+   text-align: center;
+   @media (max-width: 768px) {
+      margin-top: 150px;
+      font-size: 12px;
+   }
+}
+
+.description {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: flex-start;
+   .title {
+      width: 150px;
+      font-size: 18px;
+      text-align: right;
+      @media (max-width: 768px) {
+         width: 100px;
+      }
+   }
+   .content {
+      width: 250px;
+      font-size: 16px;
+      margin-left: 20px;
+      text-align: left;
+      word-break: break-all;
+      @media (max-width: 768px) {
+         width: 200px;
+      }
+   }
+}
+
+.shop-title {
+   margin: 200px 0px;
+}
+
+.input-field {
+   width: 300px;
+}
+
+.video-ctrl {
+   width: 300px;
+   height: 50px;
+   overflow: hidden;
+   position: relative;
+   .image-carousel {
+      .slider {
+         .slider-frame {
+            ul {
+               margin: 0px !important;
+               li {
+                  margin: 0px !important;
+                  width: 100px !important;
+                  img {
+                     width: 95px;
+                     height: 50px;
+                     // object-fit: contain;
+                     object-fit: cover;
+                  }
+               }
+            }
+         }
+      }
+   }  
+}
+
+#slide {
+   width: 10px;
+   height: 50px;
+   position: absolute;
+   cursor: pointer;
+   display: flex;
+   flex-direction: row;
+   justify-content: center;
+   align-items: center;
+   background-color: #333;
+   border-radius: 2px;
+   color: white;
+}
+
+#play-icon {
+   font-size: 60px;
+   z-index: 999;
+   cursor: pointer;
+}
+#pause-icon {
+   font-size: 60px;
+   z-index: 999;
+   display: none;
+   cursor: pointer;
+}
+
+.css-nvf14r-ToastContainer {
+   box-sizing: border-box;
+   max-height: 100%;
+   max-width: 100%;
+   overflow: hidden;
+   padding: 10px;
+   position: fixed;
+   z-index: 10000 !important;
+   top: 20px;
+   right: 20px;
+}
