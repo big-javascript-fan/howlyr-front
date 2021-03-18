@@ -3,6 +3,7 @@ let FormData = require('form-data');
 
 // const API_URL = process.env.REACT_APP_API_URL;
 const API_URL = process.env.REACT_APP_API_URL_SERVER;
+const CORS_PROXY = process.env.REACT_APP_CORS_PROXY;
 axios.defaults.withCredentials = false;
 
 const HEADERS = { 
@@ -93,8 +94,13 @@ export const uploadHowlWeb = async (
       }
    }
 
-   let response = await axios.post(`${API_URL}/uploadClipWeb/`, formData, config);
-   return response.data;
+   try {
+      let response = await axios.post(`${CORS_PROXY}${API_URL}/uploadClipWeb/`, formData, config);
+      // let response = await axios.post(`${API_URL}/uploadClipWeb/`, formData, config);
+      return response.data;
+   } catch(error) {
+      return null;
+   }
 }
 
 export const uploadHowlYoutube = async (
@@ -130,6 +136,11 @@ export const uploadHowlYoutube = async (
       }
    }
 
-   let response = await axios.post(`${API_URL}/uploadClipYoutube/`, formData, config);
-   return response.data;
+   try {
+      // let response = await axios.post(`${API_URL}/uploadClipYoutube/`, formData, config);
+      let response = await axios.post(`${CORS_PROXY}${API_URL}/uploadClipYoutube/`, formData, config);
+      return response.data;
+   } catch(error) {
+      return null;
+   }
 }

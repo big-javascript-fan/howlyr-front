@@ -63,7 +63,7 @@ const FileUploader = props => {
 };
 
 const PrevVideo = (props) => {
-   const {startTime, endTime, file, thumbnail} = props;
+   const {startTime, endTime, file, thumbnail, newPhotoFile} = props;
    const video = useRef(null);
    useEffect(() => {
       if(video) {
@@ -71,23 +71,51 @@ const PrevVideo = (props) => {
          let pauseBtnIcon = document.getElementById('pause-icon');
          let audioElement = document.getElementById('audio-field');
          
+         let playTimeout;
          if(typeof file == 'string') {
-            video.current.currentTime = startTime;
+            if(!(video.current.currentTime > startTime && video.current.currentTime < endTime)) {
+               video.current.currentTime = startTime;
+            }
          } else {
             if(file?.type.split('/')[0] === 'video') {
-               video.current.currentTime = startTime;
+               if(!(video.current.currentTime > startTime && video.current.currentTime < endTime)) {
+                  video.current.currentTime = startTime;
+               }
+            } else {
+               if(!(audioElement.currentTime > startTime && audioElement.currentTime < endTime)) {
+                  audioElement.currentTime = startTime;
+               }
             }
          }
          
          const playTime = (start, end) => {
-            let rangeTime = (end - start) * 1000;
-            setTimeout(() => {
+            let rangeTime;
+            if(typeof file == 'string') {
+               rangeTime = (end - video.current.currentTime) * 1000;
+            } else {
+               if(file?.type.split('/')[0] === 'video') {
+                  rangeTime = (end - video.current.currentTime) * 1000;
+               } else {
+                  rangeTime = (end - audioElement.currentTime) * 1000;
+               }
+            }
+            playTimeout = setTimeout(() => {
                fadeBtn();
+               if(typeof file == 'string') {
+                  video.current.currentTime = start;
+               } else {
+                  if(file?.type.split('/')[0] === 'video') {
+                     video.current.currentTime = start;
+                  } else {
+                     audioElement.currentTime = start;
+                  }
+               }
             }, (rangeTime));
          }
          const fadeBtn = (e) => {
             playBtnIcon.style.display = 'block';
             pauseBtnIcon.style.display = 'none';
+            clearTimeout(playTimeout);
             if(typeof file == 'string') {
                video.current.pause();
             } else {
@@ -167,6 +195,7 @@ const PrevVideo = (props) => {
                   </div>
             }
          </div>
+         <img src={newPhotoFile} id="new-upload-photo" width="300px" height="200px" style={{objectFit: 'contain', position: 'absolute'}} />
       </div>
    )
 }
@@ -183,10 +212,13 @@ const ShowUploadHowl = (props) => {
    const [name, setName]   = useState(null);
    const [speaker, setSpeaker] = useState(null);
    const [tags, setTags]   = useState(null);
-   console.log(thumbnail);
 
    const handleUpload = async () => {
       let image;
+      if(!title && !name && !speaker) {
+         setError('Please input the required tags');
+         return;
+      }
       if(!title) {
          setError('Please input the title')
          return ;
@@ -198,10 +230,6 @@ const ShowUploadHowl = (props) => {
       if(!speaker) {
          setError('Please input the speaker name')
          return ;
-      }
-      if(!tags) {
-         setError('Please input the tags')
-         return;
       }
       if(!newThumb) {
          image = thumbnail.blob;
@@ -217,7 +245,7 @@ const ShowUploadHowl = (props) => {
          result = await uploadHowlWeb(startTime, endTime, file, image, name, tags, title, speaker);
       }
       try {
-         if(result.success) {
+         if(result && result.success) {
             addToast('Upload Successfully!', { appearance: 'success' });
             history.push(`/profile/${result.id}`);
          } else {
@@ -237,14 +265,13 @@ const ShowUploadHowl = (props) => {
    }, [])
 
    const renderVideo = useMemo(() => (
-      <PrevVideo startTime={startTime} endTime={endTime} thumbnail={thumbnail} file={file}/>
-   ), [file, startTime, endTime, thumbnail]);
+      <PrevVideo startTime={startTime} endTime={endTime} thumbnail={thumbnail} file={file} newPhotoFile={newPhotoFile}/>
+   ), [file, startTime, endTime, thumbnail, newPhotoFile]);
 
    return (
          <div className="d-flex flex-column justify-content-start align-items-center text-center" style={{width: '240px'}} >
             { renderVideo }
-            <img src={newPhotoFile} id="new-upload-photo" width="300px" height="200px" style={{objectFit: 'contain', position: 'absolute', top: '70px'}} />
-            <span className="text-secondary">
+            <span className="text-secondary" style={{ cursor: 'pointer' }} onClick={() => showUploadHowl(false)}>
                <small>Re-Crop Howl</small>
             </span>
             <div className="row justify-content-center align-items-center mt-3">
@@ -256,7 +283,7 @@ const ShowUploadHowl = (props) => {
                      let newImgElement = document.getElementById('new-upload-photo');
                      newImgElement.style.display = "block";
 
-                     if(file?.type.split('/')[0] === 'audio') {
+                     if(file?.type && file?.type.split('/')[0] === 'audio') {
                         let imgElementOrigin = document.getElementsByClassName('card-image')[0];
                         if(imgElementOrigin) {
                            imgElementOrigin.style.display="none";
@@ -393,16 +420,36 @@ const SliderAndDragItem = (props) => {
       let pauseBtnIcon = document.getElementById('pause-icon');
       let videoElement = document.getElementById('video-play');
       let audioElement = document.getElementById('audio-field');
+      let playTimeout;
       const playTime = (start, end) => {
-         let rangeTime = (end - start) * 1000;
-         setTimeout(() => {
+         let rangeTime;
+         if(typeof file == 'string') {
+            rangeTime = (end - videoElement.currentTime) * 1000;
+         } else {
+            if(file?.type.split('/')[0] === 'video') {
+               rangeTime = (end - videoElement.currentTime) * 1000;
+            } else {
+               rangeTime = (end - audioElement.currentTime) * 1000;
+            }
+         }
+         playTimeout = setTimeout(() => {
             fadeBtn();
+            if(typeof file == 'string') {
+               videoElement.currentTime = start;
+            } else {
+               if(file?.type.split('/')[0] === 'video') {
+                  videoElement.currentTime = start;
+               } else {
+                  audioElement.currentTime = start;
+               }
+            }
          }, (rangeTime));
-         
       }
+
       const fadeBtn = (e) => {
          playBtnIcon.style.display = 'block';
          pauseBtnIcon.style.display = 'none';
+         clearTimeout(playTimeout);
          if(typeof file == 'string') {
             videoElement.pause();
          } else {
@@ -417,12 +464,18 @@ const SliderAndDragItem = (props) => {
          let start = slideIndex * 4 + Math.round(defaultPosition.x * 0.04);
          let end = slideIndex * 4 + Math.round(defaultPositionOther.x * 0.04);
          if(typeof file == 'string') {
-            videoElement.currentTime = start;
+            if(!(videoElement.currentTime > start && videoElement.currentTime < end)) {
+               videoElement.currentTime = start;
+            }
          } else {
             if(file?.type.split('/')[0] === 'video') {
-               videoElement.currentTime = start;
+               if(!(videoElement.currentTime > start && videoElement.currentTime < end)) {
+                  videoElement.currentTime = start;
+               }
             } else {
-               audioElement.currentTime = start;
+               if(!(audioElement.currentTime > start && audioElement.currentTime < end)) {
+                  audioElement.currentTime = start;
+               }
             }
          }
          playBtnIcon.style.display = 'none';
@@ -463,7 +516,7 @@ const SliderAndDragItem = (props) => {
       setIsLoading(true);
       let blob;
       if(typeof file == 'string') {
-         let blobFileFromUrl = await fetch(file).then(r => r.blob());
+         let blobFileFromUrl = await fetch('https://enigmatic-thicket-02049.herokuapp.com/' + file).then(r => r.blob());
          blob = blobFileFromUrl;
          let thumb = await getThumbnails(blob, {interval: 4});
          setThumbnails(thumb);
@@ -800,14 +853,12 @@ const CreateHowl = () => {
                                     let result = await ytToS3(youtubeLink);
                                     if(result.success) {
                                        let url = result.urls[0];
-                                       if(result.urls[0].split('://')[0] == 'http') {
-                                          url = `https://${result.urls[0].split('://')[1]}`;
-                                       }
+                                       url = url.replace('http://', 'https://');
                                        setFile(url);
                                        setYoutubeId(result.id);
                                        setShowTrimContainer(true);
                                     } else {
-                                       setError("Unabled download youtube link!")
+                                       setError("Unable to load. Please try a different YouTube link.")
                                     }
                                  } else {
                                     setError("Invalid Youtube Music URL!");

@@ -2,6 +2,7 @@ import React from 'react';
 import '../styles/landing.scss';
 
 import howlyrLogoWhite from '../images/howlry_logo_white.png';
+import { Link } from 'react-router-dom';
 
 const Footer = (props) => {
    const { logo } = props;
@@ -9,30 +10,30 @@ const Footer = (props) => {
       <footer>
          <div className="row justify-content-center">
             <div className="col-12 col-md-3">
-               <a href="index.html"><img src={howlyrLogoWhite}/> </a>
+               <Link to="/"><img src={howlyrLogoWhite}/> </Link>
                </div>	
             <div className="col-12 col-md-3">
                <h4> Company </h4>
-               <a href="about-howlyr.html">
+               <Link to="/about">
                   <p> About Howlyr</p>
-               </a>
-               <a href="community-guidelines.html">
+               </Link>
+               <Link to="/community">
                   <p> Community Guidelines</p>
-               </a>
+               </Link>
             </div>	
             <div className="col-12 col-md-3">
                <h4> Legal </h4>
-               <a href="terms-of-use.html"> 
+               <Link to="/terms-of-use"> 
                   <p> Terms of Use </p> 
-               </a>
-               <a href="privacy-policy.html">
+               </Link>
+               <Link to="/privacy-policy">
                   <p> Privacy Policy</p> 
-               </a>
+               </Link>
             </div>	
             <div className="col-12 col-md-3">
                <h4> Questions? </h4>
                <a href="mailto:support@howlyr.com"> 
-                  <p>support@howlyr.com </p>
+                  <p>support@howlyr.com</p>
                </a>
             </div>		
          </div>

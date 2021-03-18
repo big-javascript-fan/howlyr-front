@@ -1,22 +1,22 @@
 /* CSS Document */
-// @font-face {
-// 	font-family: "Geomanist";
-// 	src: url("../fonts/Geomanist-Light.woff2") format("woff2"), url("../fonts/Geomanist-Light.woff") format("woff");
-// 	font-weight: 100;
-// 	font-style: normal;
-// }
-// @font-face {
-// 	font-family: "Geomanist";
-// 	src: url("../fonts/Geomanist-Book.woff2") format("woff2"), url("../fonts/Geomanist-Book.woff") format("woff");
-// 	font-weight: 300;
-// 	font-style: normal;
-// }
-// @font-face {
-// 	font-family: "Geomanist";
-// 	src: url("../fonts/Geomanist-Bold.woff2") format("woff2"), url("../fonts/Geomanist-Bold.woff") format("woff");
-// 	font-weight: 500;
-// 	font-style: normal;
-// }
+@font-face {
+	font-family: "Geomanist";
+	src: url("./fonts/Geomanist-Light.woff2") format("woff2"), url("./fonts/Geomanist-Light.woff") format("woff");
+	font-weight: 100;
+	font-style: normal;
+}
+@font-face {
+	font-family: "Geomanist";
+	src: url("./fonts/Geomanist-Book.woff2") format("woff2"), url("./fonts/Geomanist-Book.woff") format("woff");
+	font-weight: 300;
+	font-style: normal;
+}
+@font-face {
+	font-family: "Geomanist";
+	src: url("./fonts/Geomanist-Bold.woff2") format("woff2"), url("./fonts/Geomanist-Bold.woff") format("woff");
+	font-weight: 500;
+	font-style: normal;
+}
 header {
 	display: none
 }

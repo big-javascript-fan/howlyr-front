@@ -10,17 +10,20 @@ import LinkIcon from '@material-ui/icons/Link';
 import FlagIcon from '@material-ui/icons/Flag';
 import CloseIcon from '@material-ui/icons/Close';
 
+import { useToasts } from 'react-toast-notifications';
 import cardImage from '../images/brent-profile.jpg';
 import bgImage from '../images/background-2.jpg';
 import '../styles/styles.scss';
 
 const Card = (props) => {
-   const { onClick, item } = props;
+   const { onClick, item, selectedItem } = props;
    const [pause, setPause] = useState(false);
    const [isShow, setIsShow] = useState(false);
    const [showModal, setShowModal] = useState(false);
    const [showReport, setShowReport] = useState(false);
    const [reportError, setReportError] = useState(null);
+   const [isCopiedTooltip, showCopiedTooltip] = useState(false);
+   const { addToast } = useToasts();
    const modalRef = useRef(null);
 
    useEffect(() => {
@@ -36,6 +39,20 @@ const Card = (props) => {
          document.removeEventListener("mousedown", handleClickOutside);
       };
    }, [modalRef]);
+
+   useEffect(() => {
+      if(selectedItem === null) {
+         stopAudio();
+      }
+      if(selectedItem !== item) {
+         setPause(false);
+      }
+   }, [selectedItem]);
+
+   const stopAudio = async () => {
+      let audioElement = document.getElementById('audio-play');
+      await audioElement.pause();
+   }
 
    const checkOne = (index) => {
       setReportError(null);
@@ -61,9 +78,19 @@ const Card = (props) => {
          let response = await reportClip(clipId, checkedArray);
          if(response.success) {
             setShowModal(false);
+            addToast('Reported Successfully!', { appearance: 'success' });
          }
       } else {
          setReportError('Please check the reason.');
+      }
+   }
+
+   const handleCopiedTooltip = () => {
+      if(isCopiedTooltip === false) {
+         showCopiedTooltip(true);
+         setTimeout(() => {
+            showCopiedTooltip(false);
+         }, 1000);
       }
    }
    
@@ -81,7 +108,7 @@ const Card = (props) => {
             <img src={item.imagePath} className="card-image" />
          </div>
          {
-            isShow ? 
+            (isShow || pause) ? 
             <div 
                className="card-play"
                onMouseEnter={() => {
@@ -97,10 +124,14 @@ const Card = (props) => {
                         className="card-btn-play"
                         onClick={async () => {
                            setPause(true);
+                           props.onPlayClick(item);
                            let audioElement = document.getElementById('audio-play');
                            await audioElement.pause();
                            audioElement.src = item.audioPath;
                            await audioElement.play();
+                           audioElement.onended = function() {
+                              setPause(false);
+                           }
                         }} 
                      /> :
                      <PauseIcon 
@@ -176,8 +207,10 @@ const Card = (props) => {
                                        el.select();
                                        document.execCommand('copy');
                                        document.body.removeChild(el);
+                                       handleCopiedTooltip();
                                     }}
                                  />
+                                 <span className={isCopiedTooltip?"copy-tooltip active": "copy-tooltip"}>Copied</span>
                               </div>
                            </div> 
                            <div

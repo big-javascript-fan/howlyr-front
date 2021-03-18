@@ -6,6 +6,7 @@
    margin: 10px 20px;
    width: 200px; // for title length
    text-align: center;
+   position: relative;
    .video-container {
       width: 300px;
       height: 200px;
@@ -192,12 +193,30 @@
             border-radius: 5px;
             padding: 5px;
             margin-bottom: 100px;
+            position: relative;
             .btn-icon {
                color: white;
                cursor: pointer;
             }
             &:hover {
                background: #2bacb3;
+            }
+            .copy-tooltip {
+               position: absolute;
+               opacity: 0;
+               top: 44px;
+               width: 50px;
+               height: 20px;
+               left: -8px;
+               background-color: white;
+               font-size: 12px;
+               transition: opacity .3s;
+               color: black;
+               border-radius: 4px;
+               padding: 1px;
+               &.active {
+                  opacity: 1;
+               }
             }
          }
          #report-btn {
@@ -262,6 +281,8 @@
 
 #wrapper-100vh {
    height: calc(100vh - 198px);
+   overflow-y: scroll;
+   min-height: min-content;
    @media (max-width: 768px) {
       height: auto;
    }
@@ -341,6 +362,13 @@ hr {
          }
       }
    }  
+}
+.sticky-top {
+   z-index: 999 !important;
+}
+
+#middle {
+   height: 400px;
 }
 
 #slide {

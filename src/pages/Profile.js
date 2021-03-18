@@ -52,6 +52,9 @@ const Profile = (props) => {
                                  setPause(true);
                                  let audioElement = document.getElementById('audio-detail');
                                  audioElement.play();
+                                 audioElement.onended = function() {
+                                    setPause(false);
+                                 }
                               }} 
                            /> :
                            <PauseIcon 

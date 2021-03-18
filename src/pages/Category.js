@@ -6,6 +6,7 @@ import HamburgerMenu from '../components/HamburgerMenu';
 import Card from '../components/Card';
 import { getCategories, getClips } from '../apis/Api';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { ToastProvider } from 'react-toast-notifications';
 
 import howlyrLogo from '../images/howlry_logo.png';
 import '../styles/category.scss';
@@ -20,6 +21,7 @@ const Category = (props) => {
    const [pageNum, setPageNum] = useState(1);
    const [categoryIndex, setCategoryIndex] = useState('');
    const [apiLoading, setApiLoading] = React.useState(false);
+   const [selectedItem, setSelectedItem] = React.useState(null);
 
    const isBottom = () => {
       return (window.innerHeight + window.scrollY) >= document.body.offsetHeight;
@@ -29,19 +31,23 @@ const Category = (props) => {
       setClips([]);
       setPageNum(1);
       setPageExist(true);
+      setSelectedItem(null);
    }, [categoryId])
 
-   useEffect( async () => {
-      setApiLoading(true);
-      const originalClips = await getClips(categoryId, 1);
-      if(originalClips.success) {
-         setClips(originalClips.data);
-         setPageExist(true);
-         setPageNum(pageNum + 1);
-      } else {
-         setPageExist(false);
+   useEffect(() => {
+      async function fetchClips() {
+         setApiLoading(true);
+         const originalClips = await getClips(categoryId, 1);
+         if(originalClips.success) {
+            setClips(originalClips.data);
+            setPageExist(true);
+            setPageNum(pageNum + 1);
+         } else {
+            setPageExist(false);
+         }
+         setApiLoading(false);
       }
-      setApiLoading(false);
+      fetchClips();
    }, [categoryId])
 
    const scrollEvent = async () => {
@@ -75,7 +81,7 @@ const Category = (props) => {
 
 
    return (
-      <>
+      <ToastProvider>
          <nav className="navbar sticky-top navbar-expand-lg bg-white navbar-light border-bottom justify-content-between align-items-center">
             <img src={howlyrLogo} className="howlyr-logo" onClick={()=>{
                history.push('/')
@@ -119,6 +125,8 @@ const Category = (props) => {
                               <Card 
                                  key={index}
                                  item={item}
+                                 selectedItem={selectedItem}
+                                 onPlayClick={(e) => setSelectedItem(e)}
                                  onClick={() => {
                                     history.push(`/profile/${item.id}`)
                                  }}
@@ -136,7 +144,7 @@ const Category = (props) => {
             </div>
          </div>
          <Footer/>
-      </>
+      </ToastProvider>
    )
 }
 

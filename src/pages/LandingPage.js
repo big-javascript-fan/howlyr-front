@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import Flickity from 'react-flickity-component';
 import Footer from '../components/Footer';
 import HamburgerMenu from '../components/HamburgerMenu';
