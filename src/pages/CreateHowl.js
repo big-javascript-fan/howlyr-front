@@ -21,6 +21,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import howlyrLogo from '../images/howlry_logo.png';
 import cardImage from '../images/default.png';
+import $ from 'jquery';
 import cardImage1 from '../images/default1.png';
 import '../styles/category.scss';
 import '../styles/styles.scss';
@@ -70,6 +71,7 @@ const PrevVideo = (props) => {
          let playBtnIcon = document.getElementById('play-icon');
          let pauseBtnIcon = document.getElementById('pause-icon');
          let audioElement = document.getElementById('audio-field');
+         let rangeTime;
          
          let playTimeout;
          if(typeof file == 'string') {
@@ -83,22 +85,37 @@ const PrevVideo = (props) => {
                }
             } else {
                if(!(audioElement.currentTime > startTime && audioElement.currentTime < endTime)) {
-                  audioElement.currentTime = startTime;
+                  $('#audio-field').on('canplay', function(){
+                     $(this)[0].currentTime = startTime;
+                     rangeTime = (endTime - audioElement.currentTime) * 1000;
+                 });
                }
             }
          }
          
          const playTime = (start, end) => {
-            let rangeTime;
             if(typeof file == 'string') {
                rangeTime = (end - video.current.currentTime) * 1000;
+               playDuration(start, end);
             } else {
                if(file?.type.split('/')[0] === 'video') {
                   rangeTime = (end - video.current.currentTime) * 1000;
+                  playDuration(start, end);
                } else {
-                  rangeTime = (end - audioElement.currentTime) * 1000;
+                  $('#audio-field').on('canplay', function(){
+                     rangeTime = (endTime - audioElement.currentTime) * 1000;
+                     playDuration(start, end);
+                 });
+                 if(audioElement.currentTime) {
+                    playDuration(start, end);
+                 } else if(audioElement.currentTime == start) {
+                     rangeTime = (endTime - audioElement.currentTime) * 1000;
+                     playDuration(start, end);
+                 }
                }
             }
+         }
+         const playDuration = (start, end) => {
             playTimeout = setTimeout(() => {
                fadeBtn();
                if(typeof file == 'string') {
@@ -232,7 +249,13 @@ const ShowUploadHowl = (props) => {
          return ;
       }
       if(!newThumb) {
-         image = thumbnail.blob;
+         if(thumbnail) {
+            image = thumbnail.blob;
+            console.log(image);
+         } else {
+            const response = await fetch(cardImage);
+            image = await response.blob();
+         }
       } else {
          image = newThumb
       }
@@ -890,8 +913,9 @@ const CreateHowl = () => {
                         uploadType={'audio'}
                      />
 
-                     <span className="text-secondary mb-auto">
+                     <span className="text-secondary mb-auto text-center">
                         <small>Upload audio from computer file</small>
+                        <p className="chrome-warning">For best user experience, use the Google Chrome browser</p>
                      </span>
                   </> :
                   !showUploadHowl ?
